@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "505598871436",
+    "project_id": "plastic-tracker-bfb8b",
+    "storage_bucket": "plastic-tracker-bfb8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505598871436:android:52ce3e145f993aae7bf8a9",
+        "android_client_info": {
+          "package_name": "com.csc.plastictracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505598871436-2t0a270brv6k3i92iqtqo061f2iu22f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGlJeipYYArDU3UQ6JN7wJghnP1P1hP7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505598871436-2t0a270brv6k3i92iqtqo061f2iu22f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -74,6 +74,7 @@
         android:layout_toRightOf="@id/weight"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
+        android:inputType="numberDecimal"
         />
 
     <EditText
@@ -97,11 +98,20 @@
         />
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/add_user_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/description"
-        android:layout_marginTop="48dp"
-        android:text="ADD" />
+        android:visibility="invisible"
+        android:enabled="false"
+        android:layout_marginTop="30dp"
+        android:text="ADD for you" />
+    <Button
+        android:id="@+id/add_db_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/add_user_button"
+        android:text="ADD to database" />
+
 
 </RelativeLayout>

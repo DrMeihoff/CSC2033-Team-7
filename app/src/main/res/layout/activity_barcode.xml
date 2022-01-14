@@ -7,13 +7,101 @@
     tools:context=".BarcodeActivity">
 
     <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/barcode_view"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:id="@+id/barcode_view"
         app:autoFocusButtonColor="@android:color/white"
         app:autoFocusButtonVisible="true"
         app:flashButtonColor="@color/white"
         app:flashButtonVisible="true"
-        app:maskColor="#80000000"/>
+        app:maskColor="#80000000" />
+
+    <TextView
+        android:id="@+id/barcode_id"
+        android:text="Barcode ID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barcode_view"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        />
+
+    <TextView
+        android:id="@+id/weight"
+        android:text="Weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barcode_id"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:text="Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weight"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/description"
+        android:text="Description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:id="@+id/barcode_id_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barcode_view"
+        android:layout_toRightOf="@id/barcode_id"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        />
+
+    <EditText
+        android:id="@+id/weight_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barcode_id"
+        android:layout_toRightOf="@id/weight"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:id="@+id/name_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weight"
+        android:layout_toRightOf="@id/name"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:id="@+id/description_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/description"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/description"
+        android:layout_marginTop="48dp"
+        android:text="ADD" />
 
 </RelativeLayout>

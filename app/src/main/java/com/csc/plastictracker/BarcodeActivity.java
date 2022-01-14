@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,15 +26,41 @@ public class BarcodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
 
-        Button addButton = findViewById(R.id.add_button);
-        addButton.setOnClickListener(v-> {
-
-        });
-
         final EditText barcode_id_edit = findViewById(R.id.barcode_id_edit);
         final EditText weight_edit = findViewById(R.id.weight_edit);
         final EditText name_edit = findViewById(R.id.name_edit);
         final EditText description_edit = findViewById(R.id.description_edit);
+        Button addDbButton = findViewById(R.id.add_db_button);
+        addDbButton.setOnClickListener(v-> {
+            if(TextUtils.isEmpty(barcode_id_edit.getText().toString())
+            || TextUtils.isEmpty(weight_edit.getText().toString())
+            || TextUtils.isEmpty(name_edit.getText().toString())
+            || TextUtils.isEmpty(description_edit.getText().toString())) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(BarcodeActivity.this,"Empty field is not allowed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else {
+
+                FBRecyclable fbr = new FBRecyclable();
+                Recyclable rec = new Recyclable (
+                        barcode_id_edit.getText().toString(),
+                        Float.valueOf(weight_edit.getText().toString()),
+                        name_edit.getText().toString(),
+                        description_edit.getText().toString()
+                );
+                fbr.add(rec).addOnSuccessListener(suc -> {
+                    Toast.makeText(BarcodeActivity.this,"Added successfully", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(er -> {
+                    Toast.makeText(BarcodeActivity.this,"Added unsuccessfully", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+
+
 
         CodeScannerView scannerView = findViewById(R.id.barcode_view);
         mCodeScanner = new CodeScanner(this, scannerView);

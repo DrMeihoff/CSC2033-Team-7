@@ -9,12 +9,12 @@
         android:id="@+id/textEmail"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginTop="250dp"
-        android:autofillHints=""
+        android:layout_marginTop="148dp"
         android:ems="10"
-        android:hint="Email Address"
+        android:hint="Enter your email here."
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,12 +22,23 @@
         android:id="@+id/textPassword"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginTop="100dp"
-        android:autofillHints=""
+        android:layout_marginTop="75dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Enter your password here."
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textEmail" />
+
+    <Button
+        android:id="@+id/buttonSubmitLogin"
+        android:layout_width="238dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="75dp"
+        android:text="Login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>

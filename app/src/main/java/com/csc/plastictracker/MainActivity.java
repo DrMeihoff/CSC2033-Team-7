@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,13 +54,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            buttonRegister.setVisibility(View.VISIBLE);
-            buttonLogout.setVisibility(View.INVISIBLE);
-        } else {
-            buttonRegister.setVisibility(View.INVISIBLE);
-            buttonLogout.setVisibility(View.VISIBLE);
-        }
+        updateAuthButtons();
     }
 
     public void openBarcode() {
@@ -79,5 +74,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void logout() {
         FirebaseAuth.getInstance().signOut();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(MainActivity.this, "Logged out.", Toast.LENGTH_SHORT).show();
+            updateAuthButtons();
+        } else {
+            Toast.makeText(MainActivity.this, "Something went wrong. Please try again."
+                    , Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void updateAuthButtons() {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            buttonRegister.setVisibility(View.VISIBLE);
+            buttonLogin.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.INVISIBLE);
+        } else {
+            buttonRegister.setVisibility(View.INVISIBLE);
+            buttonLogin.setVisibility(View.INVISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        }
     }
 }

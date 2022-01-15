@@ -4,18 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
@@ -23,7 +16,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private Button buttonConfirmReg;
     private EditText email;
     private EditText password;
     private EditText confirm;
@@ -33,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        buttonConfirmReg = findViewById(R.id.buttonConfirmReg);
+        Button buttonConfirmReg = findViewById(R.id.buttonConfirmReg);
         buttonConfirmReg.setOnClickListener(v -> registerUser());
         email = findViewById(R.id.textRegEmail);
         password = findViewById(R.id.textRegPassword);
@@ -81,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Signed up successfully!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "An unknown error has occurred due to Firebase.", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {

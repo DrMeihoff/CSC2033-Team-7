@@ -9,35 +9,53 @@
         android:id="@+id/textRegEmail"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="100dp"
         android:ems="10"
         android:hint="Email address"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck,TextContrastCheck"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/textRegPassword"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRegEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/textRegEmail"
+        tools:ignore="TextContrastCheck,TextContrastCheck"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/textConfirmPassword"
         android:layout_width="300dp"
         android:layout_height="70dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="Confirm Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRegPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/textRegPassword"
+        tools:ignore="TextContrastCheck,TextContrastCheck,TextContrastCheck"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/buttonConfirmReg"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="40dp"
+        android:text="Sign up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textConfirmPassword" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

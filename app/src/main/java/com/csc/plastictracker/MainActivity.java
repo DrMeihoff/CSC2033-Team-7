@@ -11,11 +11,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button button;
     private Button buttonLogin;
     private Button buttonRegister;
+    private Button buttonLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonLogin = findViewById(R.id.buttonLogin);
-        buttonLogin.setOnClickListener(v -> openLogin());
+        buttonLogin.setOnClickListener(v -> openLogin());buttonLogin.setOnClickListener(v -> openLogin());
 
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonRegister.setOnClickListener(v -> openRegister());
+
+        buttonLogout = findViewById(R.id.buttonLogout);
+        buttonLogout.setOnClickListener(v -> logout());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            buttonRegister.setVisibility(View.VISIBLE);
+            buttonLogout.setVisibility(View.INVISIBLE);
+        } else {
+            buttonRegister.setVisibility(View.INVISIBLE);
+            buttonLogout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void openBarcode() {
@@ -56,5 +75,9 @@ public class MainActivity extends AppCompatActivity {
     public void openRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
+    }
+
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
     }
 }

@@ -45,4 +45,17 @@
         android:layout_marginEnd="-1dp"
         android:text="Register" />
 
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonLogin"
+        android:layout_alignStart="@+id/button"
+        android:layout_alignEnd="@+id/button"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:text="Sign out"
+        android:visibility="invisible" />
+
 </RelativeLayout>

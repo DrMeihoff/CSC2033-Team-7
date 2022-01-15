@@ -16,24 +16,15 @@
         app:flashButtonVisible="true"
         app:maskColor="#80000000" />
 
-    <TextView
-        android:id="@+id/barcode_id"
-        android:text="Barcode ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/barcode_view"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        />
 
     <TextView
         android:id="@+id/weight"
         android:text="Weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/barcode_id"
+        android:layout_below="@id/barcode_view"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         />
 
     <TextView
@@ -56,24 +47,15 @@
         android:layout_marginTop="10dp"
         />
 
-    <EditText
-        android:id="@+id/barcode_id_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/barcode_view"
-        android:layout_toRightOf="@id/barcode_id"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        />
 
     <EditText
         android:id="@+id/weight_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/barcode_id"
+        android:layout_below="@id/barcode_view"
         android:layout_toRightOf="@id/weight"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:inputType="numberDecimal"
         />
 
@@ -98,20 +80,13 @@
         />
 
     <Button
-        android:id="@+id/add_user_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/description"
-        android:visibility="invisible"
-        android:enabled="false"
-        android:layout_marginTop="30dp"
-        android:text="ADD for you" />
-    <Button
         android:id="@+id/add_db_button"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/add_user_button"
-        android:text="ADD to database" />
+        android:layout_below="@id/description"
+        android:layout_marginTop="60dp"
+        android:visibility="invisible"
+        />
 
 
 </RelativeLayout>

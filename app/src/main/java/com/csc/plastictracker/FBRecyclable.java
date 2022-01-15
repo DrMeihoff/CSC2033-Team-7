@@ -12,6 +12,6 @@ public class FBRecyclable {
         databaseReference = db.getReference(Recyclable.class.getSimpleName());
     }
     public Task<Void> add(Recyclable rec) {
-        return databaseReference.push().setValue(rec);
+        return databaseReference.child(rec.getBarcodeId()).setValue(rec);
     }
 }

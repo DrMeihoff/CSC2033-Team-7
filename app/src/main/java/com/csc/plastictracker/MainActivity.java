@@ -14,6 +14,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button button;
+    private Button buttonLogin;
+    private Button buttonRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonLogin = findViewById(R.id.buttonLogin);
+        buttonLogin.setOnClickListener(v -> openLogin());
+
+        buttonRegister = findViewById(R.id.buttonRegister);
+        buttonRegister.setOnClickListener(v -> openRegister());
     }
 
     public void openBarcode() {
         Intent intent = new Intent(this, BarcodeActivity.class);
+        startActivity(intent);
+    }
+
+    public void openLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void openRegister() {
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 }

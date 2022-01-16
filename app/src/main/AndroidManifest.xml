@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlasticTracker">
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".GraphActivity"
             android:exported="false" />
         <activity

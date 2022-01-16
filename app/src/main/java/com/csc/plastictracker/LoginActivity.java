@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    //checks if a user is logged in. If so, returns to main activity.
     @Override
     protected void onStart() {
         super.onStart();
@@ -41,11 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //returns to main activity
     public void returnToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    //attempts to log into Firebase with provided credentials. Displays toast showing result.
     public void loginUser() {
         mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Logged in successfully!", Toast.LENGTH_SHORT).show();
+                            returnToMain();
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }

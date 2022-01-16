@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,27 +50,28 @@ public class MainActivity extends AppCompatActivity {
         buttonLogout.setOnClickListener(v -> logout());
     }
 
+    //updates buttons when returning to main activity.
     @Override
     protected void onStart() {
         super.onStart();
         updateAuthButtons();
     }
 
+    //opening different activities
     public void openBarcode() {
         Intent intent = new Intent(this, BarcodeActivity.class);
         startActivity(intent);
     }
-
     public void openLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
     public void openRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
+    //signs current user out of Firebase, checks to make sure the sign out was successful, then updates buttons.
     public void logout() {
         FirebaseAuth.getInstance().signOut();
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //if no user is currently logged in, hides logout button, shows login & register.
+    //if a user is logged in, hides login/register, shows logout.
     public void updateAuthButtons() {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             buttonRegister.setVisibility(View.VISIBLE);

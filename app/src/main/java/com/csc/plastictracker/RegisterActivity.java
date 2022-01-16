@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    //checks if a user is logged in. If so, returns to main activity.
     @Override
     protected void onStart() {
         super.onStart();
@@ -42,15 +43,20 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    //returns to main activity.
     public void returnToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    //takes user input,
     public void registerUser() {
+        //checks both passwords match,
         if (password.getText().toString().equals(confirm.getText().toString())) {
+            //attempts to create a new user if they do,
             mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                     .addOnFailureListener(e -> {
+                        //handles any errors sent back by Firebase,
                         if (e instanceof FirebaseAuthWeakPasswordException) {
                             Toast.makeText(RegisterActivity.this,
                                     "Password is not strong enough. Please increase the length and/or complexity.",
@@ -69,14 +75,17 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                     })
+                    //informs users if an account is successfully made,
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Signed up successfully!", Toast.LENGTH_SHORT).show();
+                            returnToMain();
                         } else {
                             Toast.makeText(RegisterActivity.this, "An unknown error has occurred due to Firebase.", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
+            //and tells them if the passwords don't match.
             Toast.makeText(RegisterActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
         }
     }

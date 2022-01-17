@@ -13,17 +13,14 @@ import android.widget.Toast;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.Result;
 
 public class BarcodeActivity extends AppCompatActivity {
 
     private CodeScanner mCodeScanner;
     private String barcodeId = null;
+    private DbHandler dbHandler = new DbHandler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +28,8 @@ public class BarcodeActivity extends AppCompatActivity {
 
         initBarcodeScanner();
     }
+
+
 
     protected void initBarcodeScanner() {
         CodeScannerView scannerView = findViewById(R.id.barcode_view);
@@ -43,7 +42,12 @@ public class BarcodeActivity extends AppCompatActivity {
                     public void run() {
                         Toast.makeText(BarcodeActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                         barcodeId = result.getText();
-                        checkIfExists();
+                        dbHandler.existsRecyclable(barcodeId, new DbHandler.OnGetDataListener() {
+                            @Override
+                            public void onSuccess(boolean exists) {
+                                setUpButton(exists);
+                            }
+                        });
                     }
                 });
             }
@@ -56,7 +60,9 @@ public class BarcodeActivity extends AppCompatActivity {
         });
     }
 
-    protected void setUpButton(boolean check) {
+
+
+    private void setUpButton(boolean check) {
         EditText weight_edit = findViewById(R.id.weight_edit);
         EditText name_edit = findViewById(R.id.name_edit);
         EditText description_edit = findViewById(R.id.description_edit);
@@ -64,21 +70,16 @@ public class BarcodeActivity extends AppCompatActivity {
         addDbButton.findViewById(R.id.add_db_button);
         addDbButton.setVisibility(View.VISIBLE);
         if(check) {
-            addDbButton.setText("Add to database");
-            addDbButton.setOnClickListener(addToDb(weight_edit, name_edit, description_edit));
+            addDbButton.setText("Add");
         }
         else {
-            addDbButton.setText("Add");
-            addDbButton.setOnClickListener(addToUser(weight_edit, name_edit, description_edit));
+            addDbButton.setText("Add to database");
         }
+        addDbButton.setOnClickListener(v -> addTo(weight_edit, name_edit, description_edit, check));
     }
 
-    protected View.OnClickListener addToUser(EditText weight_edit, EditText name_edit, EditText description_edit) {
-        //TODO: do this
-        return null;
-    }
 
-    protected View.OnClickListener addToDb(EditText weight_edit, EditText name_edit, EditText description_edit) {
+    private void addTo(EditText weight_edit, EditText name_edit, EditText description_edit, boolean check) {
         if (TextUtils.isEmpty(barcodeId)
                 || TextUtils.isEmpty(weight_edit.getText().toString())
                 || TextUtils.isEmpty(name_edit.getText().toString())
@@ -89,36 +90,33 @@ public class BarcodeActivity extends AppCompatActivity {
                     Toast.makeText(BarcodeActivity.this, "Empty field is not allowed", Toast.LENGTH_SHORT).show();
                 }
             });
-        } else {
-            FBRecyclable fbr = new FBRecyclable();
+        }
+        else {
             Recyclable rec = new Recyclable(
                     barcodeId,
                     Math.round(Float.valueOf(weight_edit.getText().toString()) * 100) / 100,
                     name_edit.getText().toString(),
                     description_edit.getText().toString()
             );
-            fbr.add(rec).addOnSuccessListener(suc -> {
-                Toast.makeText(BarcodeActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(er -> {
-                Toast.makeText(BarcodeActivity.this, "Added unsuccessfully", Toast.LENGTH_SHORT).show();
-            });
+            if(check) {
+                dbHandler.addUserRecyclable(rec.getBarcodeId(), FirebaseAuth.getInstance().getCurrentUser().getUid()).addOnSuccessListener(suc -> {
+                    Toast.makeText(BarcodeActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(er -> {
+                    Toast.makeText(BarcodeActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                });
+            }
+            else {
+                dbHandler.addRecyclable(rec).addOnSuccessListener(suc -> {
+                    Toast.makeText(BarcodeActivity.this, "Added to the database successfully", Toast.LENGTH_SHORT).show();
+                    setUpButton(true);
+                }).addOnFailureListener(er -> {
+                    Toast.makeText(BarcodeActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                });
+            }
+
         }
-        return null;
     }
 
-    protected void checkIfExists() {
-        DatabaseReference ref = FirebaseDatabase.getInstance("https://plastic-tracker-bfb8b-default-rtdb.europe-west1.firebasedatabase.app").getReference().child("barcodeId");
-        ref.orderByChild("barcodeId").equalTo(barcodeId).addValueEventListener(new ValueEventListener(){
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                setUpButton(dataSnapshot.exists());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     @Override
     protected void onResume() {

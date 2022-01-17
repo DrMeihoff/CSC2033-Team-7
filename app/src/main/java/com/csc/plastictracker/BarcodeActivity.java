@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class BarcodeActivity extends AppCompatActivity {
                     public void run() {
                         Toast.makeText(BarcodeActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
                         barcodeId = result.getText();
-                        dbHandler.existsRecyclable(barcodeId, new DbHandler.OnGetDataListener() {
+                        dbHandler.existsRecyclable(barcodeId, new DbHandler.onExistsRecyclable() {
                             @Override
                             public void onSuccess(boolean exists) {
                                 setUpButton(exists);
@@ -62,24 +63,32 @@ public class BarcodeActivity extends AppCompatActivity {
 
 
 
-    private void setUpButton(boolean check) {
+    private void setUpButton(boolean exists) {
         EditText weight_edit = findViewById(R.id.weight_edit);
         EditText name_edit = findViewById(R.id.name_edit);
         EditText description_edit = findViewById(R.id.description_edit);
         Button addDbButton = findViewById(R.id.add_db_button);
         addDbButton.findViewById(R.id.add_db_button);
         addDbButton.setVisibility(View.VISIBLE);
-        if(check) {
+        if(exists) {
             addDbButton.setText("Add");
+            dbHandler.getRecyclable(barcodeId, new DbHandler.onGetRecyclable() {
+                @Override
+                public void onSuccess(Recyclable rec) {
+                    weight_edit.setText(Float.toString(rec.getWeight()));
+                    name_edit.setText(rec.getName());
+                    description_edit.setText(rec.getDescription());
+                }
+            });
         }
         else {
             addDbButton.setText("Add to database");
         }
-        addDbButton.setOnClickListener(v -> addTo(weight_edit, name_edit, description_edit, check));
+        addDbButton.setOnClickListener(v -> addTo(weight_edit, name_edit, description_edit, exists));
     }
 
 
-    private void addTo(EditText weight_edit, EditText name_edit, EditText description_edit, boolean check) {
+    private void addTo(EditText weight_edit, EditText name_edit, EditText description_edit, boolean exists) {
         if (TextUtils.isEmpty(barcodeId)
                 || TextUtils.isEmpty(weight_edit.getText().toString())
                 || TextUtils.isEmpty(name_edit.getText().toString())
@@ -98,7 +107,7 @@ public class BarcodeActivity extends AppCompatActivity {
                     name_edit.getText().toString(),
                     description_edit.getText().toString()
             );
-            if(check) {
+            if(exists) {
                 dbHandler.addUserRecyclable(rec.getBarcodeId(), FirebaseAuth.getInstance().getCurrentUser().getUid()).addOnSuccessListener(suc -> {
                     Toast.makeText(BarcodeActivity.this, "Added successfully", Toast.LENGTH_SHORT).show();
                 }).addOnFailureListener(er -> {

@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonLogin;
     private Button buttonRegister;
     private Button buttonLogout;
+    private Button buttonGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(v -> logout());
+
+        buttonGraph=findViewById(R.id.buttonGraph);
+        buttonGraph.setOnClickListener(v -> openGraph());
     }
 
     //updates buttons when returning to main activity.
@@ -68,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void openRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+    private void openGraph() {
+        Intent intent = new Intent(this, GraphActivity.class);
         startActivity(intent);
     }
 

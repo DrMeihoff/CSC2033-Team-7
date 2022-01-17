@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,6 +43,9 @@ public class GraphActivity extends AppCompatActivity {
         graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<DataPoint>(getData(day()));
         graphView.addSeries(currentWeek);
+
+        String[][] testArray = {{"A","1"},{"B","2"},{"C","3"},{"D","4"},{"ugh this is gonna take ages","dasdasdas"},{"as","asda"},{"sdagsd","sfdhfd"},{"asdsad","ads"}};
+        fillStats(testArray);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -70,5 +75,23 @@ public class GraphActivity extends AppCompatActivity {
 
 
         return dataPoints;
+    }
+
+    //currently formatting stats as [name, count] while testing
+    public void fillStats(String[][] stats) {
+        LinearLayout linLay = this.findViewById(R.id.layoutStats);
+        for (String[] stat : stats) {
+            TextView tv = new TextView(this);
+            String tvText = "Name: " + stat[0] + ", amount: " + stat[1];
+            tv.setText(tvText);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            tv.setTextColor(0xFF000000); // hex color 0xAARRGGBB
+            tv.setPadding(20, 20, 20, 20);// in pixels (left, top, right, bottom)
+            tv.setLayoutParams(params);
+            linLay.addView(tv);
+        }
     }
 }

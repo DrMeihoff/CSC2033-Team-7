@@ -17,7 +17,12 @@ public class Recyclable {
         this.weight = weight;
         this.name = name;
         this.description = description;
-        this.date = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+        calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        this.date = calendar.getTime();
     }
 
     public String getBarcodeId() {

@@ -2,6 +2,7 @@ package com.csc.plastictracker;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,8 +22,25 @@ public class DbHandler {
         return databaseReference.child("recyclables").child(rec.getBarcodeId()).setValue(rec);
     }
 
+    public void getRecyclable(String barcodeId, final onGetRecyclable listener) {
+        databaseReference.child("recyclables").orderByChild("barcodeId").equalTo(barcodeId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                Recyclable rec = new Recyclable();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                   rec = ds.getValue(Recyclable.class);
+                }
+                listener.onSuccess(rec);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-    public void existsRecyclable(String barcodeId, final OnGetDataListener listener) {
+            }
+        });
+
+    }
+
+    public void existsRecyclable(String barcodeId, final onExistsRecyclable listener) {
         databaseReference.child("recyclables").orderByChild("barcodeId").equalTo(barcodeId).addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
@@ -36,7 +54,11 @@ public class DbHandler {
         });
     }
 
-    public interface OnGetDataListener {
+    public interface onGetRecyclable {
+        void onSuccess(Recyclable rec);
+    }
+
+    public interface onExistsRecyclable {
         void onSuccess(boolean exists);
     }
 

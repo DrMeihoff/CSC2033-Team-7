@@ -58,21 +58,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //opening different activities
-    public void openBarcode() {
+    private void openBarcode() {
         Intent intent = new Intent(this, BarcodeActivity.class);
         startActivity(intent);
     }
-    public void openLogin() {
+    private void openLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-    public void openRegister() {
+    private void openRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
     //signs current user out of Firebase, checks to make sure the sign out was successful, then updates buttons.
-    public void logout() {
+    private void logout() {
         FirebaseAuth.getInstance().signOut();
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toast.makeText(MainActivity.this, "Logged out.", Toast.LENGTH_SHORT).show();
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     //if no user is currently logged in, hides logout button, shows login & register.
     //if a user is logged in, hides login/register, shows logout.
-    public void updateAuthButtons() {
+    private void updateAuthButtons() {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             buttonRegister.setVisibility(View.VISIBLE);
             buttonLogin.setVisibility(View.VISIBLE);

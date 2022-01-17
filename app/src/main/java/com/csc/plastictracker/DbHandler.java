@@ -64,7 +64,7 @@ public class DbHandler {
 
     public Task<Void> addUserRecyclable(String barcodeId, String uid) {
         UserRecyclable userRecyclable = new UserRecyclable(barcodeId, uid);
-        return databaseReference.child("user_recyclables").child(uid).setValue(userRecyclable);
+        return databaseReference.child("user_recyclables").child(uid).push().setValue(userRecyclable);
     }
 
 }

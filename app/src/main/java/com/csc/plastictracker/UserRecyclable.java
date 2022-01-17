@@ -1,24 +1,24 @@
 package com.csc.plastictracker;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class UserRecyclable {
 
     private String barcodeId;
     private String uid;
-    private Date date;
+    private int year;
+    private int month;
+    private int weekOfYear;
+    private int dayOfYear;
 
     UserRecyclable(String barcodeId, String uid) {
         this.barcodeId = barcodeId;
         this.uid = uid;
         Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
-        calendar.set(Calendar.WEEK_OF_YEAR, Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
-        calendar.set(Calendar.DAY_OF_YEAR, Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
-        this.date = calendar.getTime();
+        this.year = calendar.get(Calendar.YEAR);
+        this.month = calendar.get(Calendar.MONTH);
+        this.weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+        this.dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     public String getBarcodeId() {
@@ -37,11 +37,35 @@ public class UserRecyclable {
         this.uid = uid;
     }
 
-    public Date getDate() {
-        return date;
+    public int getYear() {
+        return year;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getWeekOfYear() {
+        return weekOfYear;
+    }
+
+    public void setWeekOfYear(int weekOfYear) {
+        this.weekOfYear = weekOfYear;
+    }
+
+    public int getDayOfYear() {
+        return dayOfYear;
+    }
+
+    public void setDayOfYear(int dayOfYear) {
+        this.dayOfYear = dayOfYear;
     }
 }

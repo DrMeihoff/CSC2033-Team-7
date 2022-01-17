@@ -8,7 +8,9 @@ public class Recyclable {
     private float weight;
     private String name;
     private String description;
-    private Date date;
+    private int year;
+    private int month;
+    private int dayOfMonth;
 
     public Recyclable(){}
 
@@ -18,11 +20,9 @@ public class Recyclable {
         this.name = name;
         this.description = description;
         Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        this.date = calendar.getTime();
+        this.year = calendar.get(Calendar.YEAR);
+        this.month = calendar.get(Calendar.MONTH);
+        this.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public String getBarcodeId() {
@@ -57,11 +57,27 @@ public class Recyclable {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    public int getYear() {
+        return year;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public void setDayOfMonth(int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 }

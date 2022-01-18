@@ -11,7 +11,9 @@ public class UserRecyclable {
     private int weekOfYear;
     private int dayOfYear;
 
-    UserRecyclable(String barcodeId, String uid) {
+    public UserRecyclable(){}
+
+    public UserRecyclable(String barcodeId, String uid) {
         this.barcodeId = barcodeId;
         this.uid = uid;
         Calendar calendar = Calendar.getInstance();

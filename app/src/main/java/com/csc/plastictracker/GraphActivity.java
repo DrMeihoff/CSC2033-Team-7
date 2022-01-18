@@ -13,11 +13,14 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Random;
 
 public class GraphActivity extends AppCompatActivity {
@@ -30,16 +33,16 @@ public class GraphActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         GraphView graphView = (GraphView) findViewById(R.id.graphview);
-        graphView.setTitle("Weekly Graph ");
+        graphView.setTitle("Weekly Graph "+getDates());
         graphView.getGridLabelRenderer().setVerticalAxisTitle("Amount Recycled (kg)");
         graphView.getGridLabelRenderer().setHorizontalAxisTitle("Day Of The Week");
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
         staticLabelsFormatter.setHorizontalLabels(new String[] {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
         graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-        LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<DataPoint>(getData(day()));
-        graphView.addSeries(currentWeek);
+        /*LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<DataPoint>(getData(day()));
+        graphView.addSeries(currentWeek);*/
 
         dbHandler.getAllRecyclable(new DbHandler.onGetRecyclables() {
             @Override
@@ -50,10 +53,34 @@ public class GraphActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    protected String day() {
-        String day = LocalDate.now().getDayOfWeek().name();
-        return day;
+    public ArrayList<String> getDates(){
+        ArrayList<String> dates = new ArrayList<String>();
+
+        Date currentDate = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        dateFormat.format(currentDate);
+
+
+        ArrayList<String> daysOfWeek = new ArrayList<String>(7);
+        daysOfWeek.add(0, "MONDAY");
+        daysOfWeek.add(1, "TUESDAY");
+        daysOfWeek.add(2, "WEDNESDAY");
+        daysOfWeek.add(3, "THURSDAY");
+        daysOfWeek.add(4, "FRIDAY");
+        daysOfWeek.add(5, "SATURDAY");
+        daysOfWeek.add(6, "SUNDAY");
+
+        dates.add(dateFormat.format(currentDate));
+        String currentDayOfWeek = LocalDate.now().getDayOfWeek().name();
+        for(int i=0; i<daysOfWeek.indexOf(currentDayOfWeek)+7;i++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -(i+1));
+            Date newDate = calendar.getTime();
+            dates.add(dateFormat.format(newDate));
+        }
+        return dates;
     }
+
 
     protected DataPoint[] getData(String day) {
         ArrayList<String> daysOfWeek = new ArrayList<String>(7);

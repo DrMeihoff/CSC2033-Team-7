@@ -11,5 +11,4 @@ public class LandingScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landingscreen);
     }
-
 }

@@ -85,7 +85,7 @@ public class DbHandler {
 
     public void getAllUserRecyclable(String uid, final onGetUserRecyclables listener) {
         List<UserRecyclable> uRecs = new ArrayList<>();
-        databaseReference.child("user_recyclables").orderByChild("uid").equalTo(uid).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("user_recyclables").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
                 for(DataSnapshot val : dataSnapshot.getChildren()){

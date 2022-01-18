@@ -19,6 +19,7 @@ import java.util.List;
 
 public class DbHandler {
     private Recyclable[] recs;
+    private UserRecyclable[] uRecs;
     private DatabaseReference databaseReference;
     private boolean exists;
     public DbHandler() {
@@ -80,6 +81,24 @@ public class DbHandler {
         });
     }
 
+    public void getAllUserRecyclable(final onGetUserRecyclables listener) {
+        List<UserRecyclable> uRecs = new ArrayList<>();
+        databaseReference.child("user_recyclables").orderByChild("uid").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                for(DataSnapshot val : dataSnapshot.getChildren()){
+                    UserRecyclable uRec = val.getValue(UserRecyclable.class);
+                    uRecs.add(uRec);
+                }
+                listener.onSuccess(uRecs.toArray(new UserRecyclable[uRecs.size()]));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public interface onGetRecyclable {
         void onSuccess(Recyclable rec);
     }
@@ -89,6 +108,10 @@ public class DbHandler {
     }
     public interface onGetRecyclables {
         void onSuccess(Recyclable[] recs);
+    }
+
+    public interface onGetUserRecyclables {
+        void onSuccess(UserRecyclable[] uRecs);
     }
 
     public Task<Void> addUserRecyclable(String barcodeId, String uid) {

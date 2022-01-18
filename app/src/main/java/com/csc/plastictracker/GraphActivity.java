@@ -5,24 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
-import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class GraphActivity extends AppCompatActivity {
@@ -85,29 +80,39 @@ public class GraphActivity extends AppCompatActivity {
 
     public void fillStats(Recyclable[] recs) {
         LinearLayout linLay = this.findViewById(R.id.layoutStats);
+        //format of stats will be name, amount, date
         String[][] stats = {};
         for (Recyclable rec : recs) {
-            Boolean found = false;
+            boolean found = false;
             for (String[] stat : stats) {
-                if (rec.getName() == stat[0]) {
+                if (rec.getName().equals(stat[0])) {
                     found = true;
-                    stat[1] = String.valueOf(Integer.parseInt(stat[1]) + 1);
+                    try {
+                        Date oldDate = new SimpleDateFormat("dd/MM/yyyy").parse(stat[3]);
+                        Date newDate = new SimpleDateFormat("dd/MM/yyyy").parse(
+                                rec.getDayOfMonth()+"-"+rec.getMonth()+"-"+rec.getYear());
+                        if (newDate != null && newDate.after(oldDate)) {
+                            stat[3] = newDate.toString();
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
             if (!found) {
-                String[][] tempArray = new String[stats.length + 1][2];
-                for (int i = 0; i<stats.length;i++) {
-                    tempArray[i] = stats[i];
-                }
+                String[][] tempArray = new String[stats.length + 1][3];
+                System.arraycopy(stats, 0, tempArray, 0, stats.length);
                 tempArray[stats.length][0] = rec.getName();
-                tempArray[stats.length][1] = "1";
+                tempArray[stats.length][1] = "1"; //just putting 1 pending database change
+                tempArray[stats.length][2] = rec.getDayOfMonth()+"-"+rec.getMonth()+"-"+rec.getYear();
                 stats = tempArray;
             }
         }
         for (String[] stat : stats) {
+            Date statDate = new Date();
             TextView tv = new TextView(this);
-            String tvText = "Name: " + stat[0] + ", amount: " + stat[1];
+            String tvText = "Name: " + stat[0] + ", amount: " + stat[1]+", most recent recycle: "+stat[2];
             tv.setText(tvText);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,

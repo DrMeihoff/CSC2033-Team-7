@@ -24,6 +24,7 @@ public class DbHandler {
     private boolean exists;
     public DbHandler() {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://plastic-tracker-bfb8b-default-rtdb.europe-west1.firebasedatabase.app");
+        db.setPersistenceEnabled(true);
         databaseReference = db.getReference();
     }
 
@@ -63,6 +64,7 @@ public class DbHandler {
         });
     }
 
+
     public void getAllRecyclable(final onGetRecyclables listener) {
         List<Recyclable> recs = new ArrayList<>();
         databaseReference.child("recyclables").orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -81,9 +83,9 @@ public class DbHandler {
         });
     }
 
-    public void getAllUserRecyclable(final onGetUserRecyclables listener) {
+    public void getAllUserRecyclable(String uid, final onGetUserRecyclables listener) {
         List<UserRecyclable> uRecs = new ArrayList<>();
-        databaseReference.child("user_recyclables").orderByChild("uid").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("user_recyclables").orderByChild("uid").equalTo(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot){
                 for(DataSnapshot val : dataSnapshot.getChildren()){

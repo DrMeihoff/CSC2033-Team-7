@@ -1,7 +1,6 @@
 package com.csc.plastictracker;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LandingScreenActivity extends AppCompatActivity {

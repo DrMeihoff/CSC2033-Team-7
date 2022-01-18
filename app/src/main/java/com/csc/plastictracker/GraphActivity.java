@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +27,7 @@ import java.util.Random;
 
 public class GraphActivity extends AppCompatActivity {
 
+    private DbHandler dbHandler = new DbHandler();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -44,8 +46,12 @@ public class GraphActivity extends AppCompatActivity {
         LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<DataPoint>(getData(day()));
         graphView.addSeries(currentWeek);
 
-        String[][] testArray = {{"A","1"},{"B","2"},{"C","3"},{"D","4"},{"ugh this is gonna take ages","dasdasdas"},{"as","asda"},{"sdagsd","sfdhfd"},{"asdsad","ads"}};
-        fillStats(testArray);
+        dbHandler.getAllRecyclable(new DbHandler.onGetRecyclables() {
+            @Override
+            public void onSuccess(Recyclable[] recs) {
+                fillStats(recs);
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,9 +83,28 @@ public class GraphActivity extends AppCompatActivity {
         return dataPoints;
     }
 
-    //currently formatting stats as [name, count] while testing
-    public void fillStats(String[][] stats) {
+    public void fillStats(Recyclable[] recs) {
         LinearLayout linLay = this.findViewById(R.id.layoutStats);
+        String[][] stats = {};
+        for (Recyclable rec : recs) {
+            Boolean found = false;
+            for (String[] stat : stats) {
+                if (rec.getName() == stat[0]) {
+                    found = true;
+                    stat[1] = String.valueOf(Integer.parseInt(stat[1]) + 1);
+                    break;
+                }
+            }
+            if (!found) {
+                String[][] tempArray = new String[stats.length + 1][2];
+                for (int i = 0; i<stats.length;i++) {
+                    tempArray[i] = stats[i];
+                }
+                tempArray[stats.length][0] = rec.getName();
+                tempArray[stats.length][1] = "1";
+                stats = tempArray;
+            }
+        }
         for (String[] stat : stats) {
             TextView tv = new TextView(this);
             String tvText = "Name: " + stat[0] + ", amount: " + stat[1];

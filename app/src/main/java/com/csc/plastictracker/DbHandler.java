@@ -1,16 +1,24 @@
 package com.csc.plastictracker;
 
-import androidx.annotation.NonNull;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class DbHandler {
+    private Recyclable[] recs;
     private DatabaseReference databaseReference;
     private boolean exists;
     public DbHandler() {
@@ -54,12 +62,33 @@ public class DbHandler {
         });
     }
 
+    public void getAllRecyclable(final onGetRecyclables listener) {
+        List<Recyclable> recs = new ArrayList<>();
+        databaseReference.child("recyclables").orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                for(DataSnapshot val : dataSnapshot.getChildren()){
+                    Recyclable rec = val.getValue(Recyclable.class);
+                    recs.add(rec);
+                }
+                listener.onSuccess(recs.toArray(new Recyclable[recs.size()]));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public interface onGetRecyclable {
         void onSuccess(Recyclable rec);
     }
 
     public interface onExistsRecyclable {
         void onSuccess(boolean exists);
+    }
+    public interface onGetRecyclables {
+        void onSuccess(Recyclable[] recs);
     }
 
     public Task<Void> addUserRecyclable(String barcodeId, String uid) {

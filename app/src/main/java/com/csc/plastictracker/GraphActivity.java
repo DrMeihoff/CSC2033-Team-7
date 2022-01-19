@@ -14,36 +14,26 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.Random;
 
 public class GraphActivity extends AppCompatActivity {
 
+    private GraphView graphView;
     private DbHandler dbHandler = new DbHandler();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph);
-        GraphView graphView = (GraphView) findViewById(R.id.graphview);
-        graphView.setTitle("Weekly Graph");
-        graphView.getGridLabelRenderer().setVerticalAxisTitle("Amount Recycled (kg)");
-        graphView.getGridLabelRenderer().setHorizontalAxisTitle("Day Of The Week");
-        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
-        graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-        LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<>(getData(getDaysOfYear()));
-        graphView.addSeries(currentWeek);
+        fillData(getDaysOfYear());
         dbHandler.getAllRecyclable(new DbHandler.onGetRecyclables() {
             @Override
             public void onSuccess(Recyclable[] recs) {
@@ -70,63 +60,46 @@ public class GraphActivity extends AppCompatActivity {
             int newDate = currentDayOfYear-i;
             daysOfYear.add(newDate);
         }
+        Collections.reverse(daysOfYear);
         return daysOfYear;
     }
 
 
-    protected DataPoint[] getData(ArrayList<Integer> dates) {
-        DataPoint[] dataPoints = new DataPoint[7];
-        Map<String, Float> data = new HashMap<>();
-        for (int date: dates){
-            data.put(String.valueOf(date), null);
-        }
-        dbHandler.getAllUserRecyclable(new DbHandler.onGetUserRecyclables() {
+    public void fillData(ArrayList<Integer> dates){
+
+        dbHandler.getAllUserRecyclable(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DbHandler.onGetUserRecyclables() {
             @Override
             public void onSuccess(UserRecyclable[] uRecs) {
-                for (UserRecyclable uRec : uRecs){
-                    System.out.println(uRec.getUid());
-                    if(FirebaseAuth.getInstance().getCurrentUser().getUid() == uRec.getUid()){
-                        for (int date: dates) {
-                            if (uRec.getDayOfYear() == date) {
-                                if ((Float) data.get(date) == null){
-                                    data.put(String.valueOf(date), (getWeight(uRec)));
-                                }else {
-                                    data.put(String.valueOf(date), ((Float) data.get(date)) + getWeight(uRec));
-                                }
+                {
+                    DataPoint[] dataPoints = new DataPoint[7];
+                    for (int i=0; i < 7; i++){
+                        dataPoints[i] = new DataPoint(i, 0);
+                    }
+
+
+                    for (UserRecyclable uRec: uRecs){
+                        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uRec.getUid())){
+                            if (dates.contains(uRec.getDayOfYear())){
+                                dataPoints[dates.indexOf(uRec.getDayOfYear())] = new DataPoint(dates.indexOf(uRec.getDayOfYear()), dataPoints[dates.indexOf(uRec.getDayOfYear())].getY() + 1);
                             }
                         }
                     }
+
+                    setContentView(R.layout.activity_graph);
+                    GraphView graphView = (GraphView) findViewById(R.id.graphview);
+                    graphView.setTitle("Weekly Graph");
+                    graphView.getGridLabelRenderer().setVerticalAxisTitle("Amount of items Recycled");
+                    graphView.getGridLabelRenderer().setHorizontalAxisTitle("Day Of The Week");
+                    StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+                    staticLabelsFormatter.setHorizontalLabels(new String[] {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"});
+                    graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+                    LineGraphSeries<DataPoint> currentWeek = new LineGraphSeries<>(dataPoints);
+                    graphView.addSeries(currentWeek);
                 }
             }
         });
-        for (int date: dates){
-            if(data.get(date) == null){
-                dataPoints[dates.indexOf(date)] = new DataPoint(dates.indexOf(date), 0);
-            }else{
-                dataPoints[dates.indexOf(date)] = new DataPoint(dates.indexOf(date), Double.valueOf(data.get(date)));
-            }
-        }
-        for (int i = dates.size() ; i < 7; i++){
-            dataPoints[i] = new DataPoint(i, 0);
-        }
-        return dataPoints;
     }
 
-    protected float getWeight(UserRecyclable uRec){
-        final float[] weight = {0f};
-        dbHandler.getAllRecyclable(new DbHandler.onGetRecyclables() {
-            @Override
-            public void onSuccess(Recyclable[] Recs){
-                for (Recyclable rec: Recs){
-                    if (rec.getBarcodeId() == uRec.getBarcodeId()){
-                        weight[0] = rec.getWeight();
-                        break;
-                    }
-                }
-            }
-        });
-    return weight[0];
-    }
 
     public void fillStats(Recyclable[] recs) {
         LinearLayout linLay = this.findViewById(R.id.layoutStats);

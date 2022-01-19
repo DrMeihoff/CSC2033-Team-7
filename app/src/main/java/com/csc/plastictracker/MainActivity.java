@@ -91,10 +91,12 @@ public class MainActivity extends AppCompatActivity {
             buttonRegister.setVisibility(View.VISIBLE);
             buttonLogin.setVisibility(View.VISIBLE);
             buttonLogout.setVisibility(View.INVISIBLE);
+            button.setVisibility(View.INVISIBLE);
         } else {
             buttonRegister.setVisibility(View.INVISIBLE);
             buttonLogin.setVisibility(View.INVISIBLE);
             buttonLogout.setVisibility(View.VISIBLE);
+            button.setVisibility(View.VISIBLE);
         }
     }
 }

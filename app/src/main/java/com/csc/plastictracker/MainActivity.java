@@ -78,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GraphActivity.class);
         startActivity(intent);
     }
+    private void openLandingScreen() {
+        Intent intent = new Intent(this, LandingScreenActivity.class);
+        startActivity(intent);
+    }
 
     //signs current user out of Firebase, checks to make sure the sign out was successful, then updates buttons.
     private void logout() {

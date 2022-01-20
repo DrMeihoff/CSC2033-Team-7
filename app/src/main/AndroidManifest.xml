@@ -27,6 +27,9 @@
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
+            android:name=".LandingScreenActivity"
+            android:exported="false"/>
+        <activity
             android:name=".BarcodeActivity"
             android:exported="false" />
         <activity

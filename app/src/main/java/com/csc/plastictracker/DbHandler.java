@@ -31,10 +31,12 @@ public class DbHandler {
         databaseReference = firebaseDatabase.getReference();
     }
 
+    //adds a new recyclable item to the database
     public Task<Void> addRecyclable(Recyclable rec) {
         return databaseReference.child("recyclables").child(rec.getBarcodeId()).setValue(rec);
     }
 
+    //returns a recyclable item when given a valid barcode
     public void getRecyclable(String barcodeId, final onGetRecyclable listener) {
         databaseReference.child("recyclables").orderByChild("barcodeId").equalTo(barcodeId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -53,6 +55,7 @@ public class DbHandler {
 
     }
 
+    //checks if a given barcode matches a recyclable item in the database
     public void existsRecyclable(String barcodeId, final onExistsRecyclable listener) {
         databaseReference.child("recyclables").orderByChild("barcodeId").equalTo(barcodeId).addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
@@ -67,25 +70,7 @@ public class DbHandler {
         });
     }
 
-
-    public void getAllRecyclable(final onGetRecyclables listener) {
-        List<Recyclable> recs = new ArrayList<>();
-        databaseReference.child("recyclables").orderByChild("name").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                for(DataSnapshot val : dataSnapshot.getChildren()){
-                    Recyclable rec = val.getValue(Recyclable.class);
-                    recs.add(rec);
-                }
-                listener.onSuccess(recs.toArray(new Recyclable[recs.size()]));
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
+    //returns all items a given user has recycled
     public void getAllUserRecyclable(String uid, final onGetUserRecyclables listener) {
         List<UserRecyclable> uRecs = new ArrayList<>();
         databaseReference.child("user_recyclables").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,24 +89,18 @@ public class DbHandler {
         });
     }
 
+    //interfaces for asynchronous database returns
     public interface onGetRecyclable {
         void onSuccess(Recyclable rec);
     }
-
     public interface onExistsRecyclable {
         void onSuccess(boolean exists);
     }
-    public interface onGetRecyclables {
-        void onSuccess(Recyclable[] recs);
-    }
-
     public interface onGetUserRecyclables {
         void onSuccess(UserRecyclable[] uRecs);
     }
-
     public Task<Void> addUserRecyclable(String barcodeId, String uid) {
         UserRecyclable userRecyclable = new UserRecyclable(barcodeId, uid);
         return databaseReference.child("user_recyclables").child(uid).push().setValue(userRecyclable);
     }
-
 }

@@ -21,11 +21,14 @@ public class DbHandler {
     private Recyclable[] recs;
     private UserRecyclable[] uRecs;
     private DatabaseReference databaseReference;
+    private static FirebaseDatabase firebaseDatabase;
     private boolean exists;
     public DbHandler() {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://plastic-tracker-bfb8b-default-rtdb.europe-west1.firebasedatabase.app");
-        db.setPersistenceEnabled(true);
-        databaseReference = db.getReference();
+        if(firebaseDatabase == null) {
+            firebaseDatabase = FirebaseDatabase.getInstance("https://plastic-tracker-bfb8b-default-rtdb.europe-west1.firebasedatabase.app");
+            firebaseDatabase.setPersistenceEnabled(true);
+        }
+        databaseReference = firebaseDatabase.getReference();
     }
 
     //adds a new recyclable item to the database

@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
+// Class responsible for generating the Graph view that displays the amount
+// of items the user has recycled throughout the week.
 public class GraphActivity extends AppCompatActivity {
 
     private GraphView graphView;
@@ -38,6 +40,8 @@ public class GraphActivity extends AppCompatActivity {
         }
     }
 
+    // Finds the day of the year, as well as all of the days which have passed this week
+    //                                 ^ this is so that the appropriate days are displayed
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<Integer> getDaysOfYear(){
         ArrayList<Integer> daysOfYear = new ArrayList<>();
@@ -60,9 +64,8 @@ public class GraphActivity extends AppCompatActivity {
         return daysOfYear;
     }
 
-
+    // Generates and formats the graphView, as well as fills it with all of the appropriate data
     public void fillData(ArrayList<Integer> dates){
-
         dbHandler.getAllUserRecyclable(FirebaseAuth.getInstance().getCurrentUser().getUid(), new DbHandler.onGetUserRecyclables() {
             @Override
             public void onSuccess(UserRecyclable[] uRecs) {

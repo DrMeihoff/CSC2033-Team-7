@@ -16,30 +16,18 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button;
+
     private Button buttonLogin;
     private Button buttonRegister;
     private Button buttonLogout;
-    private Button buttonGraph;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.CAMERA},
-                            50); }
-                else {
-                    openBarcode();
-                }
-            }
-        });
+
 
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonLogin.setOnClickListener(v -> openLogin());buttonLogin.setOnClickListener(v -> openLogin());
@@ -50,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(v -> logout());
 
-        buttonGraph=findViewById(R.id.buttonGraph);
-        buttonGraph.setOnClickListener(v -> openGraph());
+
     }
 
     //updates buttons when returning to main activity.
@@ -78,10 +65,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GraphActivity.class);
         startActivity(intent);
     }
-    private void openLandingScreen() {
-        Intent intent = new Intent(this, LandingScreenActivity.class);
-        startActivity(intent);
-    }
+
 
     //signs current user out of Firebase, checks to make sure the sign out was successful, then updates buttons.
     private void logout() {
@@ -103,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
             buttonRegister.setVisibility(View.VISIBLE);
             buttonLogin.setVisibility(View.VISIBLE);
             buttonLogout.setVisibility(View.INVISIBLE);
-            buttonGraph.setVisibility(View.INVISIBLE);
-            button.setVisibility(View.INVISIBLE);
+ //           buttonGraph.setVisibility(View.INVISIBLE);
+  //          button.setVisibility(View.INVISIBLE);
         } else {
             buttonRegister.setVisibility(View.INVISIBLE);
             buttonLogin.setVisibility(View.INVISIBLE);
             buttonLogout.setVisibility(View.VISIBLE);
-            buttonGraph.setVisibility(View.VISIBLE);
-            button.setVisibility(View.VISIBLE);
+      //      buttonGraph.setVisibility(View.VISIBLE);
+     //       button.setVisibility(View.VISIBLE);
         }
     }
 }

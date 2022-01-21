@@ -38,13 +38,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            returnToMain();
+            goToLanding();
         }
     }
 
     //returns to main activity
     public void returnToMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToLanding() {
+        Intent intent = new Intent(this, LandingScreenActivity.class);
         startActivity(intent);
     }
 
@@ -56,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Logged in successfully!", Toast.LENGTH_SHORT).show();
-                            returnToMain();
+                            goToLanding();
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }

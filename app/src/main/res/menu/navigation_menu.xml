@@ -3,13 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="HardcodedText">
 
-
     <item
         android:id="@+id/nav_settings"
         android:title="Settings" />
-
-    <item
-        android:id="@+id/nav_logout"
-        android:title="Signout" />
 
 </menu>

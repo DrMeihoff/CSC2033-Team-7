@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GraphActivity extends AppCompatActivity {
 
@@ -33,13 +32,10 @@ public class GraphActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fillData(getDaysOfYear());
-        dbHandler.getAllRecyclable(new DbHandler.onGetRecyclables() {
-            @Override
-            public void onSuccess(Recyclable[] recs) {
-                fillStats(recs);
-            }
-        });
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid() != null) {
+            fillData(getDaysOfYear());
+            dbHandler.getAllUserRecyclable(FirebaseAuth.getInstance().getCurrentUser().getUid(), uRecs -> fillStats(uRecs));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -100,51 +96,67 @@ public class GraphActivity extends AppCompatActivity {
         });
     }
 
-
-    public void fillStats(Recyclable[] recs) {
-        LinearLayout linLay = this.findViewById(R.id.layoutStats);
-        //format of stats will be name, amount, date
+    //this function is used to fill in the linear layout beneath the graph with the user's recyclables
+    public void fillStats(UserRecyclable[] uRecs) {
+        //format of stats will be barcodeID, name, amount, date
         String[][] stats = {};
-        for (Recyclable rec : recs) {
+        //this loop will fill stats with user recyclables. If there are any duplicates, it updates the date to the most recent one.
+        for (UserRecyclable uRec : uRecs) {
             boolean found = false;
             for (String[] stat : stats) {
-                if (rec.getName().equals(stat[0])) {
+                if (uRec.getBarcodeId().equals(stat[0])) {
                     found = true;
                     try {
+                        //if this recyclable exists, chooses the most recent one
                         Date oldDate = new SimpleDateFormat("dd/MM/yyyy").parse(stat[3]);
                         Date newDate = new SimpleDateFormat("dd/MM/yyyy").parse(
-                                rec.getDayOfMonth()+"-"+rec.getMonth()+"-"+rec.getYear());
+                                uRec.getDayOfYear() + "-" + uRec.getMonth() + "-" + uRec.getYear());
                         if (newDate != null && newDate.after(oldDate)) {
                             stat[3] = newDate.toString();
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    //increases the amount value in the stats array
+                    stat[2] = String.valueOf((Integer.parseInt(stat[2]) + 1));
                     break;
                 }
             }
+            //if this recyclable is new, increases array length by 1 and adds it.
             if (!found) {
-                String[][] tempArray = new String[stats.length + 1][3];
-                System.arraycopy(stats, 0, tempArray, 0, stats.length);
-                tempArray[stats.length][0] = rec.getName();
-                tempArray[stats.length][1] = "1"; //just putting 1 pending database change
-                tempArray[stats.length][2] = rec.getDayOfMonth()+"-"+rec.getMonth()+"-"+rec.getYear();
-                stats = tempArray;
+                final int statsLength = stats.length;
+                String[][] tempArray = new String[statsLength + 1][4];
+                System.arraycopy(stats, 0, tempArray, 0, statsLength);
+                tempArray[statsLength][0] = uRec.getBarcodeId();
+                tempArray[statsLength][2] = "1";
+                tempArray[statsLength][3] = uRec.getDayOfYear() + "-" + uRec.getMonth() + "-" + uRec.getYear();
+                dbHandler.getRecyclable(uRec.getBarcodeId(), new DbHandler.onGetRecyclable() {
+                    @Override
+                    public void onSuccess(Recyclable rec) {
+                        tempArray[statsLength][1] = rec.getName();
+                        //this part was originally synchronous, but has been moved to be asynchronous to
+                        //match the database returns and display correct item names
+                        addTV(tempArray[statsLength]);
+                    }
+                });
+                stats = tempArray; //the final array is stored just in case
             }
         }
-        for (String[] stat : stats) {
-            Date statDate = new Date();
-            TextView tv = new TextView(this);
-            String tvText = "Name: " + stat[0] + ", amount: " + stat[1]+", most recent recycle: "+stat[2];
-            tv.setText(tvText);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            tv.setTextColor(0xFF000000); // hex color 0xAARRGGBB
-            tv.setPadding(20, 20, 20, 20);// in pixels (left, top, right, bottom)
-            tv.setLayoutParams(params);
-            linLay.addView(tv);
-        }
+    }
+
+    //this function dynamically creates new TextViews in the linear layout for each recyclable
+    public void addTV(String[] stat) {
+        LinearLayout linLay = this.findViewById(R.id.layoutStats);
+        TextView tv = new TextView(this);
+        String tvText = "Name: " + stat[1] + ", amount: " + stat[2]+"x, most recent recycle: "+stat[3];
+        tv.setText(tvText);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        tv.setTextColor(0xFF000000); // hex color 0xAARRGGBB
+        tv.setPadding(20, 20, 20, 20);// in pixels (left, top, right, bottom)
+        tv.setLayoutParams(params);
+        linLay.addView(tv);
     }
 }
